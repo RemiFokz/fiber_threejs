@@ -20,8 +20,8 @@ for (let i = 0; i < 100; i++) {
       new THREE.Vector3().setFromSphericalCoords(
         // set points in spherical coordinates
         1,
-        Math.PI - (j / 100) * Math.PI * length, // theta
-        (i / 100) * Math.PI * 2 // phi
+        Math.PI - (j / 100) * Math.PI * length, // theta (angle from top) (between 0 and PI) (PI is top) (0 is bottom)
+        (i / 100) * Math.PI * 2 // phi (angle from center) (between 0 and 2PI) (0 is front) (PI is back) (2PI is front)
       )
     );
   }
