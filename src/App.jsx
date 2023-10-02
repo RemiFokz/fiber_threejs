@@ -68,6 +68,7 @@ function BrainParticles({ allthecurves }) {
     for (let i = 0; i < allthecurves.length; i++) {
       for (let j = 0; j < density; j++) {
         myPoints.current.push({
+          // add points to myPoints array
           currentOffset: Math.random(),
           speed: Math.random() * 0.01,
           curve: allthecurves[i],
@@ -80,11 +81,17 @@ function BrainParticles({ allthecurves }) {
   useFrame(({ clock }) => {
     let curpositions = brainGeo.current.attributes.position.array;
     for (let i = 0; i < myPoints.current.length; i++) {
-      myPoints.current[i].curPosition += myPoints.current[i].speed;
-      myPoints.current[i].curPosition = myPoints.current[i].curPosition % 1;
+      // update position of points
+      myPoints.current[i].curPosition += myPoints.current[i].speed; // update curPosition by speed (random value between 0 and 0.01)
+      myPoints.current[i].curPosition = myPoints.current[i].curPosition % 1; // reset curPosition to 0 when it reaches 1 (so it loops)
       let curPoint = myPoints.current[i].curve.getPointAt(
         myPoints.current[i].curPosition
-      );
+      ); // get point on curve at curPosition (between 0 and 1)
+      // (0 is start of curve, 1 is end of curve)
+      // (curPosition is updated every frame)
+      // (curPosition is updated by speed)
+      //  (speed is a random value between 0 and 0.01)
+      // (curPosition is reset to 0 when it reaches 1)
       curpositions[i * 3] = curPoint.x;
       curpositions[i * 3 + 1] = curPoint.y;
       curpositions[i * 3 + 2] = curPoint.z;
@@ -101,21 +108,21 @@ function BrainParticles({ allthecurves }) {
     /*glsl*/ `
     varying vec2 vUv; 
       uniform float time;
-      varying float vProgress;
-      attribute float randoms;
+      varying float vProgress; //
+      attribute float randoms; // add randoms attribute
       void main() {
-       vUv = uv;
-       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-       vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = 2. * (1. / -mvPosition.z);
+       vUv = uv; 
+       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); // that sets the position of the vertex 
+       vec4 mvPosition = modelViewMatrix * vec4(position, 1.0); // get the position of the vertex in view space (relative to the camera)
+        gl_PointSize = 2. * (1. / -mvPosition.z); // set the size of the point based on the distance from the camera 
       }
     `,
     // fragment shader
     /*glsl*/ `
       uniform float time;
       void main() {
-        float disc = length(gl_PointCoord.xy - vec2(0.5));
-        float opacity = 0.3*smoothstep(0.5, 0.4, disc);
+        float disc = length(gl_PointCoord.xy - vec2(0.5)); // distance from center of the point
+        float opacity = 0.3*smoothstep(0.5, 0.4, disc); // opacity is 0.3 if disc is between 0.5 and 0.4
         gl_FragColor = vec4(vec3(opacity), 1.);
       }
     `
