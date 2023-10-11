@@ -16,16 +16,18 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
+
       - name: setup node
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+
       - name: install dependencies
         run: npm ci
+
       - name: build app
         run: npm run build
-        env:
-          PUBLIC_URL: /dist
+
       - name: upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
