@@ -34,4 +34,4 @@ jobs:
         with:
           personal_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: main
-          publish_dir: ./dist
+          publish_dir: ./dist/
