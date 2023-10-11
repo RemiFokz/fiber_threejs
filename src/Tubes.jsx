@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
-import { Canvas, extend, useFrame } from "@react-three/fiber";
+import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, shaderMaterial } from "@react-three/drei";
 import data from "./assets/data.json";
 import * as THREE from "three";
@@ -8,24 +8,41 @@ import { useRef } from "react";
 
 function Tube({ curve }) {
   const brainMat = useRef();
-  useFrame(() => {
+
+  const { viewport } = useThree();
+  useFrame(({ clock, mouse }) => {
     brainMat.current.uniforms.time.value += 0.01;
+    brainMat.current.uniforms.mouse.value = new THREE.Vector3(
+      (mouse.x * viewport.width) / 2,
+      (mouse.y * viewport.height) / 2,
+      0
+    );
   }); // useFrame is a hook that runs every frame
   const BrainMaterial = shaderMaterial(
     // shaderMaterial is a THREE.js material
     {
       time: 0,
-      color: new THREE.Color(0.1, 0.2, 0.6),
+      color: new THREE.Color(0.9, 0.2, 0.6),
+      mouse: new THREE.Vector3(0, 0, 0),
     },
     // vertext shader
     /*glsl*/ `
       uniform float time;
       varying vec2 vUv;
+      uniform vec3 mouse;
       varying float vProgress;
       void main() { // this function is called for every vertex
         vUv = uv;
         vProgress = smoothstep(-1., 1.,sin(vUv.x*8. + time *3.)); // vProgress is a value between -1 and 1 that is used to interpolate between two colors 
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); //  that sets the position of the vertex
+        vec3 p = position; // get the position of the vertex
+        float maxDist = 0.01; // set the maximum distance the vertex can move
+        float dist = length(mouse.xy * vUv); // get the distance between the mouse and the vertex
+        if(dist < maxDist){  
+          vec3 dir = normalize(mouse - p); // get the direction from the vertex to the mouse
+          dir*= (1. - dist/maxDist); // scale the direction based on the distance
+          p -= dir*0.004; // move the vertex in the direction
+        }
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0); // that sets the position of the vertex
       }
       `,
     // fragment shader

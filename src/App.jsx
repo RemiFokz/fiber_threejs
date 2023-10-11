@@ -70,7 +70,7 @@ function BrainParticles({ allthecurves }) {
         myPoints.current.push({
           // add points to myPoints array
           currentOffset: Math.random(),
-          speed: Math.random() * 0.01,
+          speed: Math.random() * 0.001,
           curve: allthecurves[i],
           curPosition: Math.random(),
         });
@@ -122,7 +122,7 @@ function BrainParticles({ allthecurves }) {
       uniform float time;
       void main() {
         float disc = length(gl_PointCoord.xy - vec2(0.5)); // distance from center of the point
-        float opacity = 0.3*smoothstep(0.5, 0.4, disc); // opacity is 0.3 if disc is between 0.5 and 0.4
+        float opacity = 0.1*smoothstep(0.5, 0.4, disc); // opacity is 0.3 if disc is between 0.5 and 0.4
         gl_FragColor = vec4(vec3(opacity), 1.);
       }
     `
