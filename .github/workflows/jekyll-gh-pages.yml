@@ -33,5 +33,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages # Используйте вашу целевую ветку
-          publish_dir: ./build # Папка, содержащая собранные файлы SPA
+          publish_branch: main # Используйте вашу целевую ветку
+          publish_dir: ./dist # Папка, содержащая собранные файлы SPA
