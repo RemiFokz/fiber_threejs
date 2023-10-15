@@ -167,7 +167,7 @@ function App() {
       <pointLight position={[10, 10, 10]} />
       <Tubes curves={brainCurves} />
       <BrainParticles allthecurves={brainCurves} />
-      <OrbitControls />
+      <OrbitControls autoRotate autoRotateSpeed={0.5} />
     </Canvas>
   );
 }
