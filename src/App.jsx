@@ -41,7 +41,7 @@ data.economics[0].paths.forEach((path) => {
 });
 
 function BrainParticles({ allthecurves }) {
-  let density = 10;
+  let density = 70;
   let numberOfPoints = density * allthecurves.length;
 
   const myPoints = useRef([]);
@@ -70,7 +70,7 @@ function BrainParticles({ allthecurves }) {
         myPoints.current.push({
           // add points to myPoints array
           currentOffset: Math.random(),
-          speed: Math.random() * 0.001,
+          speed: Math.random() * 0.002,
           curve: allthecurves[i],
           curPosition: Math.random(),
         });
@@ -113,7 +113,7 @@ function BrainParticles({ allthecurves }) {
       void main() {
        vUv = uv; 
        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); // that sets the position of the vertex 
-       vec4 mvPosition = modelViewMatrix * vec4(position, 1.0); // get the position of the vertex in view space (relative to the camera)
+       vec4 mvPosition =  modelViewMatrix * vec4(position, 1.0); // get the position of the vertex in view space (relative to the camera)
         gl_PointSize = 2. * (1. / -mvPosition.z); // set the size of the point based on the distance from the camera 
       }
     `,
@@ -122,7 +122,7 @@ function BrainParticles({ allthecurves }) {
       uniform float time;
       void main() {
         float disc = length(gl_PointCoord.xy - vec2(0.5)); // distance from center of the point
-        float opacity = 0.1*smoothstep(0.5, 0.4, disc); // opacity is 0.3 if disc is between 0.5 and 0.4
+        float opacity = 0.1*smoothstep(0.4, 0.2, disc); 
         gl_FragColor = vec4(vec3(opacity), 1.);
       }
     `

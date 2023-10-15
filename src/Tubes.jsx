@@ -33,10 +33,10 @@ function Tube({ curve }) {
       varying float vProgress;
       void main() { // this function is called for every vertex
         vUv = uv;
-        vProgress = smoothstep(-1., 1.,sin(vUv.x*8. + time *3.)); // vProgress is a value between -1 and 1 that is used to interpolate between two colors 
+        vProgress = smoothstep(-1., 1.,sin(vUv.x*8. + time *2.)); // vProgress is a value between -1 and 1 that is used to interpolate between two colors 
         vec3 p = position; // get the position of the vertex
-        float maxDist = 0.01; // set the maximum distance the vertex can move
-        float dist = length(mouse.xy * vUv); // get the distance between the mouse and the vertex
+        float maxDist = 0.04; // set the maximum distance the vertex can move
+        float dist = length(vProgress * vUv); // get the distance between the mouse and the vertex
         if(dist < maxDist){  
           vec3 dir = normalize(mouse - p); // get the direction from the vertex to the mouse
           dir*= (1. - dist/maxDist); // scale the direction based on the distance
